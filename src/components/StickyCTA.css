@@ -1,0 +1,58 @@
+.sticky-cta-container {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(100%); /* Start hidden off-screen */
+  opacity: 0;
+  pointer-events: none; /* Ignore clicks while hidden */
+  width: 100%;
+  max-width: 480px;
+  background-color: white;
+  padding: 10px;
+  box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+  z-index: 1000;
+  box-sizing: border-box;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+}
+
+.sticky-cta-container.visible {
+  transform: translateX(-50%) translateY(0); /* Slide up to view */
+  opacity: 1;
+  pointer-events: auto; /* Enable clicks */
+}
+
+.sticky-btn {
+  width: 100%;
+  background-color: #D32F2F; /* Aggressive Red */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background-color 0.2s;
+}
+
+.sticky-btn:hover {
+  background-color: #B71C1C;
+}
+
+.sticky-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.main-text {
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+.sub-text {
+  font-size: 0.85rem;
+  opacity: 0.9;
+}

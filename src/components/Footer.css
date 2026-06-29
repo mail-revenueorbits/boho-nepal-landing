@@ -1,0 +1,43 @@
+.footer {
+  background-color: var(--color-primary-dark);
+  color: rgba(255,255,255,0.7);
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-lg);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: var(--space-lg);
+  margin-bottom: var(--space-md);
+}
+
+.footer-brand {
+  max-width: 300px;
+}
+
+.footer-logo {
+  height: 40px;
+  margin-bottom: var(--space-sm);
+  filter: brightness(0) invert(1); /* Makes logo white if it is dark */
+}
+
+.footer-links h4 {
+  color: white;
+  margin-bottom: var(--space-sm);
+}
+
+.footer-links ul li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-links a:hover {
+  color: var(--color-accent);
+}
+
+.footer-bottom {
+  text-align: center;
+  font-size: 0.9rem;
+}

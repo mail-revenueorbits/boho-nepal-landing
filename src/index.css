@@ -1,0 +1,182 @@
+:root {
+  /* Color Palette - Dark Green & Earthy Bohemian Tones */
+  --color-primary: #1F3F2F; /* Dark Green */
+  --color-primary-light: #2A543E;
+  --color-primary-dark: #14291F;
+  --color-accent: #C78D6B; /* Terracotta / Warm Sand */
+  --color-accent-light: #D6A488;
+  --color-accent-dark: #B07450;
+  
+  --color-bg-light: #F9F7F4; /* Subtle Cream / Sand */
+  --color-bg-white: #FFFFFF;
+  --color-text-main: #2C2C2C;
+  --color-text-muted: #666666;
+  
+  --color-success: #4A7C59;
+
+  /* Typography */
+  --font-main: 'Outfit', sans-serif;
+
+  /* Spacing */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 2rem;
+  --space-lg: 4rem;
+  --space-xl: 8rem;
+
+  /* Border Radius */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* --- Strict Mobile-First Layout --- */
+body {
+  font-family: var(--font-main);
+  background-color: #E5E7EB; /* Muted gray outside container */
+  color: var(--color-text-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+#root {
+  width: 100%;
+  max-width: 480px; /* Lock to mobile width */
+  background-color: var(--color-bg-white);
+  min-height: 100vh;
+  position: relative;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  padding-bottom: 80px; /* Space for sticky CTA */
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.2;
+  font-weight: 700;
+  color: var(--color-text-main);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* --- Layout Utilities --- */
+.container {
+  width: 100%;
+  padding: 0 var(--space-sm);
+  box-sizing: border-box; /* Ensure padding is included in width */
+  overflow-x: hidden; /* Prevent horizontal scroll bleed within container */
+}
+
+.section-padding {
+  padding: var(--space-md) 0;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* --- Direct Response Buttons --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-main);
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: 1.1rem;
+  text-align: center;
+  width: 100%;
+}
+
+.btn-primary {
+  background-color: #D32F2F; /* Aggressive Red for CTA */
+  color: white;
+  box-shadow: 0 4px 6px rgba(211, 47, 47, 0.3);
+}
+
+.btn-primary:hover {
+  background-color: #B71C1C;
+}
+
+.btn-accent {
+  background-color: var(--color-success); /* Green for offers */
+  color: white;
+}
+
+.text-gradient {
+  color: var(--color-primary); /* Simplified for direct response */
+}
+
+/* --- Micro-animations --- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn var(--transition-slow) forwards;
+}
+
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+
+/* Pricing Badges */
+.price-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.price-original {
+  text-decoration: line-through;
+  color: var(--color-text-muted);
+  font-size: 1.1rem;
+  font-weight: 400;
+}
+
+.badge {
+  background-color: var(--color-accent);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}

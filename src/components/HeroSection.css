@@ -1,0 +1,271 @@
+.hero-section {
+  padding-top: var(--space-xs); /* Extremely compact spacing beneath non-sticky relative navbar */
+  background-color: var(--color-bg-white);
+}
+
+.hero-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-gallery-wrapper {
+  width: calc(100% + 16px); /* Bleeds out to have less margin on left and right */
+  margin-left: -8px;
+  margin-right: -8px;
+  margin-bottom: var(--space-sm); /* Reduced margin below the gallery */
+  position: relative;
+}
+
+.gallery-container-relative {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5; /* Exact 4:5 Aspect Ratio */
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #F8F7F4;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.swipe-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+  -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
+}
+
+.swipe-container::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
+}
+
+.swipe-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  scroll-snap-align: start;
+  position: relative;
+}
+
+.swipe-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* Dots overlay */
+.gallery-dots {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(6px);
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.gallery-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gallery-dot.active {
+  background: #FFFFFF;
+  width: 12px; /* Pill effect */
+  border-radius: 3px;
+  transform: scale(1.1);
+}
+
+/* Square Preview Images (Thumbnails) */
+.thumbnail-row {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-start;
+  margin-top: 10px;
+  padding: 0 8px;
+  overflow-x: auto;
+  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.thumbnail-row::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.thumbnail-container {
+  width: 54px;
+  height: 54px;
+  aspect-ratio: 1 / 1;
+  flex-shrink: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: #F3F4F6;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+.thumbnail-container:hover {
+  opacity: 0.85;
+}
+
+.thumbnail-container.active {
+  border-color: var(--color-primary); /* Dark green premium border */
+  opacity: 1;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.thumbnail-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hero-content {
+  /* No extra padding needed, .container handles it now */
+}
+
+.hero-title {
+  font-size: 2.1rem; /* Increased from 1.8rem */
+  margin-bottom: 0.6rem;
+  line-height: 1.25;
+  color: #000000; /* Pure Black */
+}
+
+.reviews-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: var(--space-sm);
+}
+
+.stars {
+  color: #16A34A; /* Green stars */
+  font-size: 1.35rem; /* Increased from 1.2rem */
+  letter-spacing: 2px;
+}
+
+.review-count {
+  color: var(--color-text-muted);
+  font-size: 1.05rem; /* Increased from 0.9rem */
+}
+
+.scarcity-badge {
+  display: inline-block;
+  background-color: #DCFCE7; /* Light green bg */
+  color: #16A34A; /* Dark green text */
+  padding: 0.4rem 1.0rem; /* Adjusted padding */
+  border-radius: var(--radius-full);
+  font-size: 0.95rem; /* Increased from 0.85rem */
+  font-weight: 700;
+  margin-bottom: var(--space-sm);
+}
+
+.pricing-container {
+  margin-bottom: var(--space-md);
+}
+
+.price-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.price-sale {
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: var(--color-text-main); /* Premium black standard text color */
+  line-height: 1.1;
+}
+
+.price-original {
+  text-decoration: line-through;
+  color: var(--color-text-muted);
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+
+.stock-warning {
+  color: var(--color-text-main); /* Premium black warning text */
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.hero-actions {
+  margin-bottom: var(--space-md);
+}
+
+.free-delivery-text {
+  text-align: center;
+  font-size: 0.95rem; /* Increased from 0.85rem */
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+}
+
+.trust-badges-row {
+  display: flex;
+  justify-content: space-around;
+  border-top: 1px solid #E5E7EB;
+  border-bottom: 1px solid #E5E7EB;
+  padding: var(--space-sm) 0;
+  margin-bottom: var(--space-md);
+}
+
+.trust-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--color-text-main);
+  gap: 0.3rem;
+  font-weight: 600;
+}
+
+/* Pulsing Zoom Animation for Hero CTA Button */
+@keyframes ctaPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 4px 6px rgba(211, 47, 47, 0.3);
+  }
+  50% {
+    transform: scale(1.04);
+    box-shadow: 0 8px 18px rgba(211, 47, 47, 0.55);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 4px 6px rgba(211, 47, 47, 0.3);
+  }
+}
+
+.pulse-btn {
+  animation: ctaPulse 2s infinite ease-in-out;
+  transition: all var(--transition-fast) !important;
+}
+
+.pulse-btn:active {
+  transform: scale(0.97);
+}
+
+

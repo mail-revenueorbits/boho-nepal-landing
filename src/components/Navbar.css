@@ -1,0 +1,24 @@
+.navbar {
+  position: relative;
+  padding: 1rem 0;
+  border-radius: 0; /* Override glass-panel default radius */
+  border-left: none;
+  border-right: none;
+  border-top: none;
+}
+
+.navbar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  height: 40px;
+  width: auto;
+}
+
+.btn-sm {
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
+}

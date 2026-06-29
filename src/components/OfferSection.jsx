@@ -55,10 +55,13 @@ const OfferSection = () => {
     const deliveryCharge = qty >= 2 ? 0 : (formData.location === 'inside' ? 100 : 150);
     const grandTotal = bagsTotal + deliveryCharge;
 
-    return { bagsTotal, deliveryCharge, grandTotal };
+    // Tracked value for Meta: subtract Rs. 350 base cost per unit from the product subtotal
+    const metaTrackedValue = Math.max(0, bagsTotal - (qty * 350));
+
+    return { bagsTotal, deliveryCharge, grandTotal, metaTrackedValue };
   };
 
-  const { bagsTotal, deliveryCharge, grandTotal } = calculatePricing();
+  const { bagsTotal, deliveryCharge, grandTotal, metaTrackedValue } = calculatePricing();
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -86,7 +89,7 @@ const OfferSection = () => {
 
     // Track InitiateCheckout on client-side Pixel upon successful validation
     trackPixelEvent('InitiateCheckout', {
-      value: bagsTotal,
+      value: metaTrackedValue,
       currency: 'NPR',
       content_name: 'Boho Nepal Checkout Form Submit'
     });
@@ -122,7 +125,7 @@ const OfferSection = () => {
 
       // 2. Track client-side Purchase event
       trackPixelEvent('Purchase', {
-        value: bagsTotal,
+        value: metaTrackedValue,
         currency: 'NPR',
         content_name: 'Bohemian Hemp Sidebag'
       }, { eventID: eventId });
@@ -146,7 +149,7 @@ const OfferSection = () => {
           eventSourceUrl: window.location.href,
           userData,
           customData: {
-            value: bagsTotal,
+            value: metaTrackedValue,
             currency: 'NPR'
           }
         })

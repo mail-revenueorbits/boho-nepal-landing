@@ -44,7 +44,8 @@
 .order-form-container {
   background-color: #FFFFFF;
   padding: var(--space-sm) 0;
-  margin-bottom: var(--space-md);
+  margin-top: 2.5rem;
+  margin-bottom: 3rem;
   scroll-margin-top: 10px;
 }
 

@@ -157,7 +157,25 @@ const OfferSection = () => {
         console.error('[Meta CAPI Frontend Post Exception]', capiErr);
       });
 
-      // 4. Update state to show checkout success modal
+      // 4. Send Slack webhook notification (securely via serverless function)
+      fetch('/api/slack-notify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phoneNumber,
+          address: formData.address,
+          quantity: formData.quantity,
+          location: formData.location,
+          totalPrice: grandTotal
+        })
+      }).catch((slackErr) => {
+        console.error('[Slack Frontend Post Exception]', slackErr);
+      });
+
+      // 5. Update state to show checkout success modal
       setModalStep('success');
 
     } catch (err) {

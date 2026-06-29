@@ -86,7 +86,7 @@ const OfferSection = () => {
 
     // Track InitiateCheckout on client-side Pixel upon successful validation
     trackPixelEvent('InitiateCheckout', {
-      value: grandTotal,
+      value: bagsTotal,
       currency: 'NPR',
       content_name: 'Boho Nepal Checkout Form Submit'
     });
@@ -122,7 +122,7 @@ const OfferSection = () => {
 
       // 2. Track client-side Purchase event
       trackPixelEvent('Purchase', {
-        value: grandTotal,
+        value: bagsTotal,
         currency: 'NPR',
         content_name: 'Bohemian Hemp Sidebag'
       }, { eventID: eventId });
@@ -146,7 +146,7 @@ const OfferSection = () => {
           eventSourceUrl: window.location.href,
           userData,
           customData: {
-            value: grandTotal,
+            value: bagsTotal,
             currency: 'NPR'
           }
         })

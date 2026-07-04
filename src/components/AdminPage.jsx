@@ -79,11 +79,27 @@ const AdminPage = () => {
     return () => subscription.unsubscribe();
   }, []);
 
+  // Handle full-screen layout on desktop by overriding mobile-first wrappers
+  useEffect(() => {
+    const rootElement = document.getElementById('root');
+    if (rootElement) {
+      rootElement.classList.add('admin-mode-root');
+    }
+    document.body.classList.add('admin-mode-body');
+
+    return () => {
+      if (rootElement) {
+        rootElement.classList.remove('admin-mode-root');
+      }
+      document.body.classList.remove('admin-mode-body');
+    };
+  }, []);
+
   // Sign in using Supabase Auth
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     if (!email.trim() || !password.trim()) {
-      setLoginError('कृपया इमेल र पासवर्ड प्रविष्ट गर्नुहोस् (Please enter email and password)');
+      setLoginError('Please enter both email and password.');
       return;
     }
 
@@ -99,7 +115,7 @@ const AdminPage = () => {
       if (error) throw error;
     } catch (err) {
       console.error('[Supabase Auth Login Error]', err);
-      setLoginError(err.message || 'लगइन असफल भयो। विवरण जाँच्नुहोस्।');
+      setLoginError(err.message || 'Login failed. Please verify your credentials.');
     } finally {
       setIsLoggingIn(false);
     }
@@ -128,7 +144,7 @@ const AdminPage = () => {
       setOrders(data || []);
     } catch (err) {
       console.error('[Load Orders Error]', err);
-      setFetchError(err.message || 'अर्डरहरू लोड गर्न सकिएन।');
+      setFetchError(err.message || 'Could not load orders from database.');
     } finally {
       setIsLoading(false);
     }
@@ -240,7 +256,7 @@ const AdminPage = () => {
   const formatDate = (dateString) => {
     if (!dateString) return '-';
     const date = new Date(dateString);
-    return date.toLocaleString('ne-NP', {
+    return date.toLocaleString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
@@ -284,7 +300,7 @@ const AdminPage = () => {
             <Lock size={32} />
           </div>
           <h2 className="login-brand-title">Boho Nepal</h2>
-          <p className="login-brand-subtitle">अर्डर व्यवस्थापन - एडमिन लगइन</p>
+          <p className="login-brand-subtitle">Order Management - Admin Login</p>
 
           <form onSubmit={handleLoginSubmit} className="login-form">
             {loginError && <div className="login-error">{loginError}</div>}
@@ -292,7 +308,7 @@ const AdminPage = () => {
             <div className="form-group">
               <input
                 type="email"
-                placeholder="इमेल (Email)"
+                placeholder="Email Address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="login-input"
@@ -303,7 +319,7 @@ const AdminPage = () => {
               />
               <input
                 type="password"
-                placeholder="पासवर्ड (Password)"
+                placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="login-input"
@@ -317,7 +333,7 @@ const AdminPage = () => {
               className="login-btn"
               disabled={isLoggingIn}
             >
-              {isLoggingIn ? 'लगइन गर्दै...' : 'लगइन गर्नुहोस्'}
+              {isLoggingIn ? 'Logging in...' : 'Log In'}
             </button>
           </form>
         </div>
@@ -335,7 +351,7 @@ const AdminPage = () => {
           </div>
           <div className="nav-title-group">
             <h1>Boho Nepal</h1>
-            <span>एडमिन अर्डर ड्यासबोर्ड</span>
+            <span>Admin Order Dashboard</span>
           </div>
         </div>
 
@@ -354,7 +370,7 @@ const AdminPage = () => {
             title="Log Out"
           >
             <LogOut size={18} />
-            <span className="logout-btn-text">बाहिरिनुहोस्</span>
+            <span className="logout-btn-text">Log Out</span>
           </button>
         </div>
       </header>
@@ -366,27 +382,27 @@ const AdminPage = () => {
         <section className="metrics-grid">
           <div className="metric-card">
             <div className="metric-card-icon"><ShoppingCart size={60} /></div>
-            <span className="metric-card-label">जम्मा अर्डर (Total)</span>
+            <span className="metric-card-label">Total Orders</span>
             <span className="metric-card-value">{metrics.total}</span>
           </div>
           <div className="metric-card">
             <div className="metric-card-icon"><DollarSign size={60} /></div>
-            <span className="metric-card-label">जम्मा बिक्री (Sales)</span>
-            <span className="metric-card-value" style={{color: '#1e3f20'}}>रु {metrics.revenue}</span>
+            <span className="metric-card-label">Total Sales</span>
+            <span className="metric-card-value" style={{color: '#1e3f20'}}>Rs. {metrics.revenue}</span>
           </div>
           <div className="metric-card" style={{borderLeft: '4px solid #f59f00'}}>
             <div className="metric-card-icon"><ClockIcon /></div>
-            <span className="metric-card-label">प्रक्रियामा (Pending)</span>
+            <span className="metric-card-label">Pending</span>
             <span className="metric-card-value" style={{color: '#f59f00'}}>{metrics.pending}</span>
           </div>
           <div className="metric-card" style={{borderLeft: '4px solid #1c7ed6'}}>
             <div className="metric-card-icon"><TruckIcon /></div>
-            <span className="metric-card-label">पठाएको (Shipping)</span>
+            <span className="metric-card-label">Shipping</span>
             <span className="metric-card-value" style={{color: '#1c7ed6'}}>{metrics.shipping}</span>
           </div>
           <div className="metric-card" style={{borderLeft: '4px solid #37b24d'}}>
             <div className="metric-card-icon"><Check size={60} /></div>
-            <span className="metric-card-label">डेलिभर (Delivered)</span>
+            <span className="metric-card-label">Delivered</span>
             <span className="metric-card-value" style={{color: '#37b24d'}}>{metrics.delivered}</span>
           </div>
         </section>
@@ -397,7 +413,7 @@ const AdminPage = () => {
             <Search className="search-icon" size={18} />
             <input 
               type="text" 
-              placeholder="नाम, फोन नम्बर, वा ठेगाना खोज्नुहोस्..."
+              placeholder="Search by customer name, phone, or address..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="search-input"
@@ -409,11 +425,11 @@ const AdminPage = () => {
             onChange={(e) => setStatusFilter(e.target.value)}
             className="filter-select"
           >
-            <option value="all">सबै अर्डर स्थिति (All Status)</option>
-            <option value="pending">प्रक्रियामा (Pending)</option>
-            <option value="shipping">डेलिभरीमा (Shipping)</option>
-            <option value="delivered">डेलिभर भएको (Delivered)</option>
-            <option value="cancelled">रद्द गरिएको (Cancelled)</option>
+            <option value="all">All Shipping Status</option>
+            <option value="pending">Pending</option>
+            <option value="shipping">Shipping</option>
+            <option value="delivered">Delivered</option>
+            <option value="cancelled">Cancelled</option>
           </select>
         </section>
 
@@ -421,7 +437,7 @@ const AdminPage = () => {
           <div className="admin-login-wrapper" style={{ minHeight: 'auto', padding: '1rem 0' }}>
             <div className="login-error" style={{ width: '100%', maxWidth: 'none', marginBottom: 0 }}>
               <AlertTriangle size={18} style={{ marginRight: '0.5rem', verticalAlign: 'middle' }} />
-              त्रुटि: {fetchError}. अर्डरहरू लोड गर्न सकिएन। कृपया जाँच्नुहोस् कि Supabase मा RLS अर्डरहरू तालिकाका लागि सक्षम छ र तपाईंको इमेल प्रमाणीकरण गरिएको छ।
+              Error: {fetchError}. Could not load orders. Please verify your Supabase RLS security policies and network connection.
             </div>
           </div>
         )}
@@ -430,14 +446,14 @@ const AdminPage = () => {
         {isLoading && orders.length === 0 ? (
           <div className="admin-loading-wrapper">
             <div className="loading-spinner"></div>
-            <p>अर्डरहरू लोड हुँदैछ...</p>
+            <p>Loading orders...</p>
           </div>
         ) : filteredOrders.length === 0 ? (
           /* Empty state */
           <div className="admin-empty-state">
             <ShoppingCart size={48} className="text-muted" style={{ marginBottom: '1rem', opacity: 0.5 }} />
-            <h3 className="empty-state-title">कुनै अर्डर भेटिएन</h3>
-            <p className="empty-state-subtitle">तपाईंको खोजी वा फिल्टरसँग मिल्ने कुनै अर्डरहरू छैनन्।</p>
+            <h3 className="empty-state-title">No orders found</h3>
+            <p className="empty-state-subtitle">No orders match your search and filter criteria.</p>
           </div>
         ) : (
           <>
@@ -470,7 +486,7 @@ const AdminPage = () => {
                       <ShoppingCart size={14} />
                       <span>
                         <span className="quantity-badge">{order.quantity} Qty</span>
-                        कुल मूल्य: <span className="price-display-bold">रु {order.total_price}</span>
+                        Total Price: <span className="price-display-bold">Rs. {order.total_price}</span>
                       </span>
                     </div>
                   </div>
@@ -513,14 +529,14 @@ const AdminPage = () => {
               <table className="desktop-table">
                 <thead>
                   <tr>
-                    <th>अर्डर मिति (Date)</th>
-                    <th>ग्राहकको नाम (Customer)</th>
-                    <th>फोन नम्बर (Phone)</th>
-                    <th>डेलिभरी ठेगाना (Address)</th>
-                    <th>परिमाण (Qty)</th>
-                    <th>जम्मा मूल्य (Total)</th>
-                    <th>स्थिति (Status)</th>
-                    <th style={{ textAlign: 'right' }}>कार्यहरू (Actions)</th>
+                    <th>Order Date</th>
+                    <th>Customer Name</th>
+                    <th>Phone Number</th>
+                    <th>Delivery Address</th>
+                    <th>Quantity</th>
+                    <th>Total Price</th>
+                    <th>Status</th>
+                    <th style={{ textAlign: 'right' }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -538,7 +554,7 @@ const AdminPage = () => {
                         {order.address}
                       </td>
                       <td style={{ fontWeight: '700' }}>{order.quantity}</td>
-                      <td style={{ fontWeight: '800', color: '#1e3f20' }}>रु {order.total_price}</td>
+                      <td style={{ fontWeight: '800', color: '#1e3f20' }}>Rs. {order.total_price}</td>
                       <td>
                         <select
                           value={order.status || 'pending'}
@@ -584,7 +600,7 @@ const AdminPage = () => {
         <div className="modal-overlay" onClick={() => setEditingOrder(null)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h3>अर्डर सम्पादन गर्नुहोस् (Edit Order)</h3>
+              <h3>Edit Order</h3>
               <button onClick={() => setEditingOrder(null)} className="modal-close-btn">
                 <X size={20} />
               </button>
@@ -592,7 +608,7 @@ const AdminPage = () => {
             <form onSubmit={handleEditSubmit}>
               <div className="modal-body">
                 <div className="admin-form-group">
-                  <label>ग्राहकको नाम (Customer Name)</label>
+                  <label>Customer Name</label>
                   <input
                     type="text"
                     name="name"
@@ -605,7 +621,7 @@ const AdminPage = () => {
 
                 <div className="form-row-grid">
                   <div className="admin-form-group">
-                    <label>फोन नम्बर (Phone Number)</label>
+                    <label>Phone Number</label>
                     <input
                       type="tel"
                       name="phone"
@@ -616,7 +632,7 @@ const AdminPage = () => {
                     />
                   </div>
                   <div className="admin-form-group">
-                    <label>डेलिभरी क्षेत्र (Location)</label>
+                    <label>Delivery Location</label>
                     <select
                       name="location"
                       value={editFormData.location}
@@ -630,7 +646,7 @@ const AdminPage = () => {
                 </div>
 
                 <div className="admin-form-group">
-                  <label>ठेगाना (Delivery Address)</label>
+                  <label>Delivery Address</label>
                   <input
                     type="text"
                     name="address"
@@ -643,7 +659,7 @@ const AdminPage = () => {
 
                 <div className="form-row-grid">
                   <div className="admin-form-group">
-                    <label>परिमाण (Quantity)</label>
+                    <label>Quantity</label>
                     <input
                       type="number"
                       name="quantity"
@@ -655,7 +671,7 @@ const AdminPage = () => {
                     />
                   </div>
                   <div className="admin-form-group">
-                    <label>जम्मा मूल्य (Total Price)</label>
+                    <label>Total Price (Rs.)</label>
                     <input
                       type="number"
                       name="total_price"
@@ -669,7 +685,7 @@ const AdminPage = () => {
                 </div>
 
                 <div className="admin-form-group">
-                  <label>अर्डर स्थिति (Order Status)</label>
+                  <label>Order Status</label>
                   <select
                     name="status"
                     value={editFormData.status}
@@ -691,14 +707,14 @@ const AdminPage = () => {
                   className="modal-btn btn-secondary"
                   disabled={actionInProgress}
                 >
-                  रद्द गर्नुहोस् (Cancel)
+                  Cancel
                 </button>
                 <button 
                   type="submit" 
                   className="modal-btn btn-primary-save"
                   disabled={actionInProgress}
                 >
-                  {actionInProgress ? 'सुरक्षित गर्दै...' : 'सुरक्षित गर्नुहोस् (Save Changes)'}
+                  {actionInProgress ? 'Saving...' : 'Save Changes'}
                 </button>
               </div>
             </form>
@@ -714,9 +730,9 @@ const AdminPage = () => {
               <div className="delete-warning-box">
                 <AlertTriangle size={36} className="delete-warning-icon" />
                 <div>
-                  <h3 className="delete-warning-title">अर्डर डिलिट गर्नुहोस्?</h3>
+                  <h3 className="delete-warning-title">Delete Order?</h3>
                   <p className="delete-warning-desc">
-                    के तपाईं निश्चित हुनुहुन्छ कि यो अर्डर डिलिट गर्न चाहनुहुन्छ? यो कार्य पुन: फर्काउन सकिने छैन।
+                    Are you sure you want to delete this order? This action cannot be undone.
                   </p>
                 </div>
               </div>
@@ -728,7 +744,7 @@ const AdminPage = () => {
                 className="modal-btn btn-secondary"
                 disabled={actionInProgress}
               >
-                होइन (No)
+                No
               </button>
               <button 
                 type="button" 
@@ -736,7 +752,7 @@ const AdminPage = () => {
                 className="modal-btn btn-danger"
                 disabled={actionInProgress}
               >
-                {actionInProgress ? 'डिलिट गर्दै...' : 'अर्डर डिलिट गर्नुहोस्'}
+                {actionInProgress ? 'Deleting...' : 'Delete Order'}
               </button>
             </div>
           </div>

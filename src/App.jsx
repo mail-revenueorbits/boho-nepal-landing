@@ -7,20 +7,27 @@ import GallerySection from './components/GallerySection';
 import Footer from './components/Footer';
 import StickyCTA from './components/StickyCTA';
 import AdminPage from './components/AdminPage';
-import { initPixel } from './utils/facebook-pixel';
+import { initAnalytics, setupBehavioralTracking } from './utils/analytics';
 
 function App() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
 
   useEffect(() => {
-    initPixel();
+    // Start GA4, Microsoft Clarity and Meta Pixel
+    initAnalytics();
+
+    // Start tracking user scrolls, sessions, and UTMs
+    const cleanupBehavioral = setupBehavioralTracking();
 
     const handleLocationChange = () => {
       setCurrentPath(window.location.pathname);
     };
 
     window.addEventListener('popstate', handleLocationChange);
-    return () => window.removeEventListener('popstate', handleLocationChange);
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      cleanupBehavioral();
+    };
   }, []);
 
   const isAdminPath = currentPath === '/admin' || currentPath === '/admin/';

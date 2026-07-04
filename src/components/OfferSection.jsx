@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { ShoppingCart, Check, X } from 'lucide-react';
 import './OfferSection.css';
 import { supabase } from '../utils/supabaseClient';
-import { trackPixelEvent, getCookie } from '../utils/facebook-pixel';
+import { getCookie } from '../utils/facebook-pixel';
+import { trackEvent } from '../utils/analytics';
 
 const OfferSection = () => {
   const [formData, setFormData] = useState({
@@ -17,6 +18,29 @@ const OfferSection = () => {
   const [formError, setFormError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Focus state for field-level mobile analytics funnel
+  const [trackedFields, setTrackedFields] = useState({
+    name: false,
+    phoneNumber: false,
+    address: false,
+    quantity: false,
+    location: false
+  });
+
+  const handleFieldFocus = (fieldName) => {
+    if (!trackedFields[fieldName]) {
+      setTrackedFields(prev => ({ ...prev, [fieldName]: true }));
+      
+      // If it's the very first field they touch, fire "Form_Start"
+      const isFirstField = !Object.values(trackedFields).some(val => val);
+      if (isFirstField) {
+        trackEvent('Form_Start', { first_field: fieldName });
+      }
+
+      trackEvent('Form_Field_Focus', { field_name: fieldName });
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -24,15 +48,33 @@ const OfferSection = () => {
       [name]: value,
     }));
     if (formError) setFormError('');
+    // Track user typing focus
+    handleFieldFocus(name);
   };
 
   const handleSelectChange = (e) => {
     const { name, value } = e.target;
+    const finalVal = name === 'quantity' ? parseInt(value) : value;
+
     setFormData((prev) => ({
       ...prev,
-      [name]: name === 'quantity' ? parseInt(value) : value,
+      [name]: finalVal,
     }));
     if (formError) setFormError('');
+
+    // Track user selection focus
+    handleFieldFocus(name);
+
+    if (name === 'quantity') {
+      trackEvent('Select_Offer', {
+        selected_quantity: finalVal,
+        subtotal: finalVal === 1 ? 899 : finalVal === 2 ? 1600 : finalVal * 800
+      });
+    } else if (name === 'location') {
+      trackEvent('Select_Location', {
+        selected_location: value
+      });
+    }
   };
 
   // Pricing calculations
@@ -68,30 +110,40 @@ const OfferSection = () => {
     setFormError('');
 
     if (!formData.name.trim()) {
-      setFormError('कृपया तपाईंको नाम लेख्नुहोस् (Please enter your name)');
+      const errorMsg = 'कृपया तपाईंको नाम लेख्नुहोस् (Please enter your name)';
+      setFormError(errorMsg);
+      trackEvent('Form_Validation_Failed', { field: 'name', error_type: 'missing_name', message: errorMsg });
       return;
     }
     if (!formData.phoneNumber.trim()) {
-      setFormError('कृपया फोन नम्बर लेख्नुहोस् (Please enter your phone number)');
+      const errorMsg = 'कृपया फोन नम्बर लेख्नुहोस् (Please enter your phone number)';
+      setFormError(errorMsg);
+      trackEvent('Form_Validation_Failed', { field: 'phoneNumber', error_type: 'missing_phone', message: errorMsg });
       return;
     }
 
     const phoneRegex = /^[0-9\s-+]{7,15}$/;
     if (!phoneRegex.test(formData.phoneNumber.trim())) {
-      setFormError('सहि फोन नम्बर राख्नुहोला (Please enter a valid phone number)');
+      const errorMsg = 'सहि फोन नम्बर राख्नुहोला (Please enter a valid phone number)';
+      setFormError(errorMsg);
+      trackEvent('Form_Validation_Failed', { field: 'phoneNumber', error_type: 'invalid_phone_pattern', message: errorMsg });
       return;
     }
 
     if (!formData.address.trim()) {
-      setFormError('कृपया डेलिभरी ठेगाना लेख्नुहोस् (Please enter your delivery address)');
+      const errorMsg = 'कृपया डेलिभरी ठेगाना लेख्नुहोस् (Please enter your delivery address)';
+      setFormError(errorMsg);
+      trackEvent('Form_Validation_Failed', { field: 'address', error_type: 'missing_address', message: errorMsg });
       return;
     }
 
-    // Track InitiateCheckout on client-side Pixel upon successful validation
-    trackPixelEvent('InitiateCheckout', {
+    // Track Initiate_Checkout in the unified analytics manager upon successful validation
+    trackEvent('Initiate_Checkout', {
       value: metaTrackedValue,
       currency: 'NPR',
-      content_name: 'Boho Nepal Checkout Form Submit'
+      origin: 'Boho Nepal Checkout Form Submit',
+      quantity: formData.quantity,
+      location: formData.location
     });
 
     setModalStep('confirm');
@@ -123,11 +175,14 @@ const OfferSection = () => {
       // Generate a unique eventID for Meta browser-pixel and server-CAPI deduplication
       const eventId = `boho-nepal-order-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 
-      // 2. Track client-side Purchase event
-      trackPixelEvent('Purchase', {
+      // 2. Track unified Purchase Success event
+      trackEvent('Purchase_Success', {
         value: metaTrackedValue,
         currency: 'NPR',
-        content_name: 'Bohemian Hemp Sidebag'
+        content_name: 'Bohemian Hemp Sidebag',
+        quantity: formData.quantity,
+        total_price: grandTotal,
+        delivery_location: formData.location
       }, { eventID: eventId });
 
       // 3. Dispatch server-side Conversions API (CAPI) event
@@ -235,6 +290,7 @@ const OfferSection = () => {
                   placeholder="तपाईंको पूरा नाम (Your Name) *"
                   value={formData.name}
                   onChange={handleInputChange}
+                  onFocus={() => handleFieldFocus('name')}
                   className="form-input"
                 />
               </div>
@@ -247,6 +303,7 @@ const OfferSection = () => {
                   placeholder="फोन नम्बर (Phone Number) *"
                   value={formData.phoneNumber}
                   onChange={handleInputChange}
+                  onFocus={() => handleFieldFocus('phoneNumber')}
                   className="form-input"
                 />
               </div>
@@ -259,6 +316,7 @@ const OfferSection = () => {
                   placeholder="डेलिभरी ठेगाना (Delivery Address) *"
                   value={formData.address}
                   onChange={handleInputChange}
+                  onFocus={() => handleFieldFocus('address')}
                   className="form-input"
                 />
               </div>
@@ -272,6 +330,7 @@ const OfferSection = () => {
                     name="quantity"
                     value={formData.quantity}
                     onChange={handleSelectChange}
+                    onFocus={() => handleFieldFocus('quantity')}
                     className="form-select"
                   >
                     <option value={1}>1 Bag — रु. 899</option>
@@ -287,6 +346,7 @@ const OfferSection = () => {
                     name="location"
                     value={formData.location}
                     onChange={handleSelectChange}
+                    onFocus={() => handleFieldFocus('location')}
                     className="form-select"
                   >
                     <option value="inside">Inside Valley (रु. १०० डेलिभरी)</option>

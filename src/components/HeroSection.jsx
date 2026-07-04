@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowRight, Truck, Tag, MessageCircle } from 'lucide-react';
 import './HeroSection.css';
-import { trackPixelEvent } from '../utils/facebook-pixel';
+import { trackEvent } from '../utils/analytics';
 
 const HeroSection = () => {
   const images = [
@@ -39,7 +39,7 @@ const HeroSection = () => {
   };
   
   const scrollToForm = () => {
-    trackPixelEvent('InitiateCheckout', { content_name: 'Hero Section CTA' });
+    trackEvent('Initiate_Checkout', { origin: 'Hero Section CTA' });
     const formElement = document.getElementById('order-form');
     if (formElement) {
       formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });

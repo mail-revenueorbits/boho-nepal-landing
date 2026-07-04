@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ShoppingCart } from 'lucide-react';
 import './StickyCTA.css';
-import { trackPixelEvent } from '../utils/facebook-pixel';
+import { trackEvent } from '../utils/analytics';
 
 const StickyCTA = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -39,7 +39,7 @@ const StickyCTA = () => {
   }, []);
 
   const handleStickyClick = () => {
-    trackPixelEvent('InitiateCheckout', { content_name: 'Sticky CTA' });
+    trackEvent('Initiate_Checkout', { origin: 'Sticky CTA' });
     const formElement = document.getElementById('order-form');
     if (formElement) {
       formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });

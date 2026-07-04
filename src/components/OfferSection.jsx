@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { ShoppingCart, Check, X } from 'lucide-react';
 import './OfferSection.css';
 import { supabase } from '../utils/supabaseClient';
-import { getCookie } from '../utils/facebook-pixel';
 import { trackEvent } from '../utils/analytics';
 
 const OfferSection = () => {
@@ -172,9 +171,6 @@ const OfferSection = () => {
         throw new Error(error.message);
       }
 
-      // Generate a unique eventID for Meta browser-pixel and server-CAPI deduplication
-      const eventId = `boho-nepal-order-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
-
       // 2. Track unified Purchase Success event
       trackEvent('Purchase_Success', {
         value: metaTrackedValue,
@@ -183,33 +179,6 @@ const OfferSection = () => {
         quantity: formData.quantity,
         total_price: grandTotal,
         delivery_location: formData.location
-      }, { eventID: eventId });
-
-      // 3. Dispatch server-side Conversions API (CAPI) event
-      const userData = {
-        name: formData.name,
-        phone: formData.phoneNumber,
-        fbp: getCookie('_fbp'),
-        fbc: getCookie('_fbc'),
-      };
-
-      fetch('/api/facebook-capi', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          eventName: 'Purchase',
-          eventId: eventId,
-          eventSourceUrl: window.location.href,
-          userData,
-          customData: {
-            value: metaTrackedValue,
-            currency: 'NPR'
-          }
-        })
-      }).catch((capiErr) => {
-        console.error('[Meta CAPI Frontend Post Exception]', capiErr);
       });
 
       // 4. Send Slack webhook notification (securely via serverless function)

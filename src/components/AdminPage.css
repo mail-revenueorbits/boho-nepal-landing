@@ -842,3 +842,37 @@ body.admin-mode-body {
   color: var(--admin-primary);
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
+
+/* Mobile Navbar Improvements */
+@media (max-width: 768px) {
+  .admin-navbar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem;
+    gap: 1rem;
+  }
+  
+  .nav-brand-group {
+    justify-content: center;
+  }
+  
+  .nav-title-group span {
+    display: none; /* Hide subtitle on mobile to save space */
+  }
+
+  .nav-action-group {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .admin-tabs {
+    margin-right: 0;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .admin-tab-btn {
+    flex: 1;
+    text-align: center;
+  }
+}

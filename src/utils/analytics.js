@@ -1,8 +1,25 @@
-// Boho Nepal Unified Analytics Utility (GA4, Microsoft Clarity, & Meta Pixel)
+// Boho Nepal Unified Analytics Utility (GA4, Microsoft Clarity, & Meta Pixel + Supabase)
+import { supabase } from './supabaseClient';
 
 export const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID || '';
 export const CLARITY_PROJECT_ID = import.meta.env.VITE_CLARITY_PROJECT_ID || '';
 export const PIXEL_ID = import.meta.env.VITE_FACEBOOK_PIXEL_ID || '';
+
+// Simple session ID generator
+const generateSessionId = () => {
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+};
+
+// Store or retrieve session ID
+let sessionId = '';
+if (typeof window !== 'undefined') {
+  sessionId = sessionStorage.getItem('boho_session_id');
+  if (!sessionId) {
+    sessionId = generateSessionId();
+    sessionStorage.setItem('boho_session_id', sessionId);
+  }
+}
+
 
 /**
  * Initializes GA4, Microsoft Clarity, and Meta Pixel dynamically
@@ -122,6 +139,21 @@ export const trackEvent = (eventName, params = {}, options = {}) => {
   // 3. Dispatch to Microsoft Clarity
   if (window.clarity && CLARITY_PROJECT_ID) {
     window.clarity('event', eventName);
+  }
+
+  // 4. Dispatch to In-House Supabase Database
+  try {
+    supabase.from('analytics_events').insert([{
+      session_id: sessionId,
+      event_name: eventName,
+      page_path: window.location.pathname,
+      is_mobile: window.innerWidth <= 768,
+      event_data: augmentedParams
+    }]).then(({error}) => {
+      if (error) console.error('[Supabase Analytics Error]', error);
+    });
+  } catch (err) {
+    console.error('[Supabase Analytics Error]', err);
   }
 };
 

@@ -809,3 +809,36 @@ body.admin-mode-body {
   padding-bottom: 0 !important;
   overflow-x: visible !important;
 }
+
+/* Tabs Styling */
+.admin-tabs {
+  display: flex;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 4px;
+  border-radius: 8px;
+  gap: 4px;
+  margin-right: 1rem;
+}
+
+.admin-tab-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 6px 12px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-tab-btn:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.admin-tab-btn.active {
+  background: white;
+  color: var(--admin-primary);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}

@@ -16,12 +16,8 @@ import {
 } from 'lucide-react';
 import { supabase } from '../utils/supabaseClient';
 import './AdminPage.css';
-import AnalyticsDashboard from './AnalyticsDashboard';
 
 const AdminPage = () => {
-  // Navigation State
-  const [activeTab, setActiveTab] = useState('orders');
-
   // Login Form States
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -360,20 +356,6 @@ const AdminPage = () => {
         </div>
 
         <div className="nav-action-group">
-          <div className="admin-tabs">
-            <button 
-              className={`admin-tab-btn ${activeTab === 'orders' ? 'active' : ''}`}
-              onClick={() => setActiveTab('orders')}
-            >
-              Orders
-            </button>
-            <button 
-              className={`admin-tab-btn ${activeTab === 'analytics' ? 'active' : ''}`}
-              onClick={() => setActiveTab('analytics')}
-            >
-              Analytics
-            </button>
-          </div>
           <button 
             onClick={loadOrders} 
             className="nav-btn" 
@@ -396,11 +378,7 @@ const AdminPage = () => {
       {/* Main dashboard content */}
       <main className="admin-dashboard-content">
         
-        {activeTab === 'analytics' ? (
-          <AnalyticsDashboard />
-        ) : (
-          <>
-            {/* KPI metrics row */}
+        {/* KPI metrics row */}
         <section className="metrics-grid">
           <div className="metric-card">
             <div className="metric-card-icon"><ShoppingCart size={60} /></div>
@@ -614,8 +592,6 @@ const AdminPage = () => {
               </table>
             </div>
           </>
-        )}
-        </>
         )}
       </main>
 

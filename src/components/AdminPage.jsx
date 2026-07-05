@@ -37,6 +37,9 @@ const AdminPage = () => {
   // Search & Filter State
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [dateFilter, setDateFilter] = useState('all'); // 'all', 'today', 'yesterday', '7d', '30d', 'custom'
+  const [customStartDate, setCustomStartDate] = useState('');
+  const [customEndDate, setCustomEndDate] = useState('');
 
   // Modal States
   const [editingOrder, setEditingOrder] = useState(null);
@@ -280,19 +283,53 @@ const AdminPage = () => {
     const normalizedStatus = order.status || 'pending';
     const matchesStatus = statusFilter === 'all' || normalizedStatus === statusFilter;
 
-    return matchesSearch && matchesStatus;
+    let matchesDate = true;
+    if (dateFilter !== 'all' && order.created_at) {
+      const orderDate = new Date(order.created_at);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      if (dateFilter === 'today') {
+        matchesDate = orderDate >= today;
+      } else if (dateFilter === 'yesterday') {
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+        matchesDate = orderDate >= yesterday && orderDate < today;
+      } else if (dateFilter === '7d') {
+        const last7Days = new Date(today);
+        last7Days.setDate(last7Days.getDate() - 7);
+        matchesDate = orderDate >= last7Days;
+      } else if (dateFilter === '30d') {
+        const last30Days = new Date(today);
+        last30Days.setDate(last30Days.getDate() - 30);
+        matchesDate = orderDate >= last30Days;
+      } else if (dateFilter === 'custom') {
+        if (customStartDate) {
+          const start = new Date(customStartDate);
+          start.setHours(0, 0, 0, 0);
+          if (orderDate < start) matchesDate = false;
+        }
+        if (customEndDate && matchesDate) {
+          const end = new Date(customEndDate);
+          end.setHours(23, 59, 59, 999);
+          if (orderDate > end) matchesDate = false;
+        }
+      }
+    }
+
+    return matchesSearch && matchesStatus && matchesDate;
   });
 
   // KPI Calculations
   const metrics = {
-    total: orders.length,
-    revenue: orders
+    total: filteredOrders.length,
+    revenue: filteredOrders
       .filter(o => (o.status || 'pending') !== 'cancelled')
       .reduce((sum, o) => sum + (o.total_price || 0), 0),
-    pending: orders.filter(o => (o.status || 'pending') === 'pending').length,
-    shipping: orders.filter(o => o.status === 'shipping').length,
-    delivered: orders.filter(o => o.status === 'delivered').length,
-    cancelled: orders.filter(o => o.status === 'cancelled').length
+    pending: filteredOrders.filter(o => (o.status || 'pending') === 'pending').length,
+    shipping: filteredOrders.filter(o => o.status === 'shipping').length,
+    delivered: filteredOrders.filter(o => o.status === 'delivered').length,
+    cancelled: filteredOrders.filter(o => o.status === 'cancelled').length
   };
 
   // Render Login overlay if not authenticated
@@ -442,17 +479,50 @@ const AdminPage = () => {
             />
           </div>
 
-          <select 
-            value={statusFilter} 
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="filter-select"
-          >
-            <option value="all">All Shipping Status</option>
-            <option value="pending">Pending</option>
-            <option value="shipping">Shipping</option>
-            <option value="delivered">Delivered</option>
-            <option value="cancelled">Cancelled</option>
-          </select>
+          <div className="filters-group" style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <select 
+              value={dateFilter} 
+              onChange={(e) => setDateFilter(e.target.value)}
+              className="filter-select"
+            >
+              <option value="all">All Dates</option>
+              <option value="today">Today</option>
+              <option value="yesterday">Yesterday</option>
+              <option value="7d">Last 7 Days</option>
+              <option value="30d">Last 30 Days</option>
+              <option value="custom">Custom Range</option>
+            </select>
+
+            {dateFilter === 'custom' && (
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                <input 
+                  type="date" 
+                  value={customStartDate} 
+                  onChange={(e) => setCustomStartDate(e.target.value)} 
+                  className="filter-select"
+                />
+                <span style={{color: 'var(--admin-text-muted)'}}>to</span>
+                <input 
+                  type="date" 
+                  value={customEndDate} 
+                  onChange={(e) => setCustomEndDate(e.target.value)} 
+                  className="filter-select"
+                />
+              </div>
+            )}
+
+            <select 
+              value={statusFilter} 
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="filter-select"
+            >
+              <option value="all">All Shipping Status</option>
+              <option value="pending">Pending</option>
+              <option value="shipping">Shipping</option>
+              <option value="delivered">Delivered</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+          </div>
         </section>
 
         {fetchError && (

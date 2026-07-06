@@ -7,7 +7,7 @@ const FeaturesSection = () => {
     { title: 'एकदमै बाक्लो र लामो समय टिक्ने Hemp कपडा' },
     { title: 'Hemp Cloth Material (गाँजाले बनेको ब्याग)' },
     { title: 'नेपालमै बनेको १००% हस्तनिर्मित (100% Made in Nepal)' },
-    { title: 'आकर्षक Dark Green कलर - Unique Boho Style' },
+    { title: 'Compact Design तर धेरै Storage - सजिलै अट्ने Mobile, Charger र Keys' },
     { title: '२ वटा किन्दा मात्र रु. १६०० (Free Delivery)' },
     { title: '100% Genuine Product Guarantee' },
   ];

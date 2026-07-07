@@ -57,22 +57,10 @@ const AdminPage = () => {
     location: 'inside'
   });
 
-  // Check existing session and listen for auth state updates
+  // Consolidate initial session loading and updates in a single listener to prevent race conditions
   useEffect(() => {
-    const checkSessionAndLoad = async () => {
-      setIsLoading(true);
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        setIsAuthenticated(true);
-        await loadOrders();
-      } else {
-        setIsLoading(false);
-      }
-    };
+    setIsLoading(true);
 
-    checkSessionAndLoad();
-
-    // Listen for sign-in / sign-out events automatically
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session) {
         setIsAuthenticated(true);
@@ -80,6 +68,7 @@ const AdminPage = () => {
       } else {
         setIsAuthenticated(false);
         setOrders([]);
+        setIsLoading(false);
       }
     });
 
@@ -332,6 +321,20 @@ const AdminPage = () => {
     cancelled: filteredOrders.filter(o => o.status === 'cancelled').length
   };
 
+  // Advanced delivery performance ratios (completed orders = delivered + cancelled)
+  const completedCount = metrics.delivered + metrics.cancelled;
+  const successRate = completedCount > 0 ? Math.round((metrics.delivered / completedCount) * 100) : 0;
+  const cancellationRate = completedCount > 0 ? Math.round((metrics.cancelled / completedCount) * 100) : 0;
+
+  // Financial Value breakdown
+  const deliveredValue = filteredOrders
+    .filter(o => o.status === 'delivered')
+    .reduce((sum, o) => sum + (o.total_price || 0), 0);
+
+  const cancelledValue = filteredOrders
+    .filter(o => o.status === 'cancelled')
+    .reduce((sum, o) => sum + (o.total_price || 0), 0);
+
   // Render Login overlay if not authenticated
   if (!isAuthenticated) {
     return (
@@ -437,34 +440,65 @@ const AdminPage = () => {
           <AnalyticsDashboard />
         ) : (
           <>
-            {/* KPI metrics row */}
-        <section className="metrics-grid">
-          <div className="metric-card">
-            <div className="metric-card-icon"><ShoppingCart size={60} /></div>
-            <span className="metric-card-label">Total Orders</span>
-            <span className="metric-card-value">{metrics.total}</span>
-          </div>
-          <div className="metric-card">
-            <div className="metric-card-icon"><DollarSign size={60} /></div>
-            <span className="metric-card-label">Total Sales</span>
-            <span className="metric-card-value" style={{color: '#1e3f20'}}>Rs. {metrics.revenue}</span>
-          </div>
-          <div className="metric-card" style={{borderLeft: '4px solid #f59f00'}}>
-            <div className="metric-card-icon"><ClockIcon /></div>
-            <span className="metric-card-label">Pending</span>
-            <span className="metric-card-value" style={{color: '#f59f00'}}>{metrics.pending}</span>
-          </div>
-          <div className="metric-card" style={{borderLeft: '4px solid #1c7ed6'}}>
-            <div className="metric-card-icon"><TruckIcon /></div>
-            <span className="metric-card-label">Shipping</span>
-            <span className="metric-card-value" style={{color: '#1c7ed6'}}>{metrics.shipping}</span>
-          </div>
-          <div className="metric-card" style={{borderLeft: '4px solid #37b24d'}}>
-            <div className="metric-card-icon"><Check size={60} /></div>
-            <span className="metric-card-label">Delivered</span>
-            <span className="metric-card-value" style={{color: '#37b24d'}}>{metrics.delivered}</span>
-          </div>
-        </section>
+            {/* KPI metrics row - Grid 1: Logistics pipeline */}
+            <h3 className="admin-section-subtitle">📦 Operational Pipeline</h3>
+            <section className="metrics-grid">
+              <div className="metric-card" style={{borderLeft: '4px solid #495057'}}>
+                <div className="metric-card-icon"><ShoppingCart size={60} style={{opacity: 0.05, position: 'absolute', right: '-5px', bottom: '-5px', transform: 'scale(1.5)'}} /></div>
+                <span className="metric-card-label">Total Orders</span>
+                <span className="metric-card-value">{metrics.total}</span>
+              </div>
+              <div className="metric-card" style={{borderLeft: '4px solid #f59f00'}}>
+                <div className="metric-card-icon"><ClockIcon /></div>
+                <span className="metric-card-label">Pending</span>
+                <span className="metric-card-value" style={{color: '#f59f00'}}>{metrics.pending}</span>
+              </div>
+              <div className="metric-card" style={{borderLeft: '4px solid #1c7ed6'}}>
+                <div className="metric-card-icon"><TruckIcon /></div>
+                <span className="metric-card-label">Shipping</span>
+                <span className="metric-card-value" style={{color: '#1c7ed6'}}>{metrics.shipping}</span>
+              </div>
+              <div className="metric-card" style={{borderLeft: '4px solid #37b24d'}}>
+                <div className="metric-card-icon"><Check size={60} style={{color: '#37b24d', opacity: 0.1, position: 'absolute', right: '-5px', bottom: '-5px', transform: 'scale(1.5)'}} /></div>
+                <span className="metric-card-label">Delivered</span>
+                <span className="metric-card-value" style={{color: '#37b24d'}}>{metrics.delivered}</span>
+              </div>
+              <div className="metric-card" style={{borderLeft: '4px solid #e03131'}}>
+                <div className="metric-card-icon"><X size={60} style={{color: '#e03131', opacity: 0.1, position: 'absolute', right: '-5px', bottom: '-5px', transform: 'scale(1.5)'}} /></div>
+                <span className="metric-card-label">Cancelled</span>
+                <span className="metric-card-value" style={{color: '#e03131'}}>{metrics.cancelled}</span>
+              </div>
+            </section>
+
+            {/* KPI metrics row - Grid 2: Revenue & Performance metrics */}
+            <h3 className="admin-section-subtitle">📈 Sales & Performance Insights</h3>
+            <section className="metrics-grid" style={{marginBottom: '2.5rem'}}>
+              <div className="metric-card" style={{borderLeft: '4px solid #1e3f20'}}>
+                <div className="metric-card-icon"><DollarSign size={60} style={{color: '#1e3f20', opacity: 0.1, position: 'absolute', right: '-5px', bottom: '-5px', transform: 'scale(1.5)'}} /></div>
+                <span className="metric-card-label">Expected Sales</span>
+                <span className="metric-card-value" style={{color: '#1e3f20'}}>Rs. {metrics.revenue}</span>
+              </div>
+              <div className="metric-card" style={{borderLeft: '4px solid #2b8a3e'}}>
+                <div className="metric-card-icon"><DollarSign size={60} style={{color: '#2b8a3e', opacity: 0.1, position: 'absolute', right: '-5px', bottom: '-5px', transform: 'scale(1.5)'}} /></div>
+                <span className="metric-card-label">Delivered Value</span>
+                <span className="metric-card-value" style={{color: '#2b8a3e'}}>Rs. {deliveredValue}</span>
+              </div>
+              <div className="metric-card" style={{borderLeft: '4px solid #c92a2a'}}>
+                <div className="metric-card-icon"><DollarSign size={60} style={{color: '#c92a2a', opacity: 0.1, position: 'absolute', right: '-5px', bottom: '-5px', transform: 'scale(1.5)'}} /></div>
+                <span className="metric-card-label">Cancelled Value</span>
+                <span className="metric-card-value" style={{color: '#c92a2a'}}>Rs. {cancelledValue}</span>
+              </div>
+              <div className="metric-card" style={{borderLeft: '4px solid #2f9e44'}}>
+                <div className="metric-card-icon"><Check size={60} style={{color: '#2f9e44', opacity: 0.1, position: 'absolute', right: '-5px', bottom: '-5px', transform: 'scale(1.5)'}} /></div>
+                <span className="metric-card-label">Delivery Success</span>
+                <span className="metric-card-value" style={{color: '#2f9e44'}}>{successRate}%</span>
+              </div>
+              <div className="metric-card" style={{borderLeft: '4px solid #e03131'}}>
+                <div className="metric-card-icon"><AlertTriangle size={60} style={{color: '#e03131', opacity: 0.1, position: 'absolute', right: '-5px', bottom: '-5px', transform: 'scale(1.5)'}} /></div>
+                <span className="metric-card-label">Cancellation Rate</span>
+                <span className="metric-card-value" style={{color: '#e03131'}}>{cancellationRate}%</span>
+              </div>
+            </section>
 
         {/* Search and Filters panel */}
         <section className="controls-card">

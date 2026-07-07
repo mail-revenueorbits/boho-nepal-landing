@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ShoppingCart, Check, X } from 'lucide-react';
 import './OfferSection.css';
 import { supabase } from '../utils/supabaseClient';
@@ -13,6 +13,34 @@ const OfferSection = () => {
     quantity: 1,
     location: 'inside', // 'inside' = Kathmandu Valley, 'outside' = Outside Valley
   });
+
+  // Silent automatic geolocation detection on mount
+  useEffect(() => {
+    const detectUserLocation = async () => {
+      try {
+        const res = await fetch('/api/detect-location');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.location) {
+            setFormData(prev => ({
+              ...prev,
+              location: data.location
+            }));
+            
+            // Log automatic detection to analytics
+            trackEvent('Location_Auto_Detected', { 
+              detected_location: data.location, 
+              city: data.city || 'unknown',
+              country: data.country || 'unknown'
+            });
+          }
+        }
+      } catch (err) {
+        console.error('Silent location pre-selection failed:', err);
+      }
+    };
+    detectUserLocation();
+  }, []);
 
   const [modalStep, setModalStep] = useState('none'); // 'none', 'confirm', 'success'
   const [formError, setFormError] = useState('');

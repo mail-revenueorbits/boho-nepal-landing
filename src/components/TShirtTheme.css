@@ -98,8 +98,8 @@
 
 /* Hero Section */
 .tshirt-theme .t-hero-section {
-  padding-top: 2rem;
-  padding-bottom: 4rem;
+  padding-top: 0;
+  padding-bottom: 2rem;
   display: flex;
   flex-direction: column;
 }

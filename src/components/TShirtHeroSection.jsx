@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const TShirtHeroSection = () => {
+const TShirtHeroSection = ({ selectedQuantity, setSelectedQuantity }) => {
   const images = [
     '/t-shirt-images/t-shirt-1.png',
     '/t-shirt-images/t-shirt-2.png',
@@ -60,7 +60,7 @@ const TShirtHeroSection = () => {
               key={idx}
               src={src} 
               alt={`T-Shirt view ${idx + 1}`} 
-              style={{ flex: '0 0 100%', width: '100%', height: '100%', objectFit: 'cover', scrollSnapAlign: 'start' }} 
+              style={{ flex: '0 0 100%', width: '100%', height: '100%', objectFit: 'cover', scrollSnapAlign: 'start', scrollSnapStop: 'always' }} 
             />
           ))}
         </div>
@@ -114,14 +114,30 @@ const TShirtHeroSection = () => {
       </ul>
 
       <div className="pricing-grid">
-        <div className="pricing-tier">
+        <div 
+          className="pricing-tier" 
+          style={{ 
+            cursor: 'pointer',
+            borderColor: selectedQuantity === 1 ? 'var(--t-accent)' : 'oklch(25% 0 0)',
+            backgroundColor: selectedQuantity === 1 ? 'oklch(22% 0 0)' : 'var(--t-surface)'
+          }}
+          onClick={() => setSelectedQuantity(1)}
+        >
           <div>
             <div className="pricing-tier-name">1 T-Shirt</div>
             <div className="pricing-tier-desc">+ Delivery Charge</div>
           </div>
           <div className="pricing-tier-price">Rs. 899</div>
         </div>
-        <div className="pricing-tier" style={{ borderColor: 'var(--t-ink)', backgroundColor: 'oklch(22% 0 0)' }}>
+        <div 
+          className="pricing-tier" 
+          style={{ 
+            cursor: 'pointer',
+            borderColor: selectedQuantity === 2 ? 'var(--t-accent)' : 'oklch(25% 0 0)',
+            backgroundColor: selectedQuantity === 2 ? 'oklch(22% 0 0)' : 'var(--t-surface)'
+          }}
+          onClick={() => setSelectedQuantity(2)}
+        >
           <div>
             <div className="pricing-tier-name">2 T-Shirts</div>
             <div className="pricing-tier-desc" style={{ color: 'var(--t-ink)' }}>FREE Delivery 🚚</div>

@@ -34,6 +34,7 @@
 .tshirt-theme h1,
 .tshirt-theme h2,
 .tshirt-theme h3 {
+  color: var(--t-ink);
   font-weight: 800;
   letter-spacing: -0.04em;
   text-wrap: balance; /* Impeccable rule */

@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './TShirtTheme.css';
 import TShirtHeroSection from './TShirtHeroSection';
 import TShirtOrderForm from './TShirtOrderForm';
 
 const TShirtLandingPage = () => {
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
+
   useEffect(() => {
     // Scroll to top on mount
     window.scrollTo(0, 0);
@@ -19,8 +21,8 @@ const TShirtLandingPage = () => {
       </header>
 
       <main>
-        <TShirtHeroSection />
-        <TShirtOrderForm />
+        <TShirtHeroSection selectedQuantity={selectedQuantity} setSelectedQuantity={setSelectedQuantity} />
+        <TShirtOrderForm selectedQuantity={selectedQuantity} setSelectedQuantity={setSelectedQuantity} />
       </main>
 
       <footer style={{ padding: '3rem 1.5rem', textAlign: 'center', borderTop: '1px solid oklch(25% 0 0)', color: 'var(--t-ink-muted)' }}>

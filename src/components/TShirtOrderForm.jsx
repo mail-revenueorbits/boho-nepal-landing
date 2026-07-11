@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../utils/supabaseClient';
 import { trackEvent } from '../utils/analytics';
 
-const TShirtOrderForm = () => {
+const TShirtOrderForm = ({ selectedQuantity, setSelectedQuantity }) => {
   const [formData, setFormData] = useState({
     name: '',
     address: '',
     phoneNumber: '',
-    quantity: 1,
     location: 'inside', // 'inside' = Kathmandu Valley, 'outside' = Outside Valley
     color: 'Black',
   });
@@ -55,14 +54,17 @@ const TShirtOrderForm = () => {
 
   const handleSelectChange = (e) => {
     const { name, value } = e.target;
-    const finalVal = name === 'quantity' ? parseInt(value) : value;
-    setFormData((prev) => ({ ...prev, [name]: finalVal }));
+    if (name === 'quantity') {
+      setSelectedQuantity(parseInt(value));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
     if (formError) setFormError('');
     handleFieldFocus(name);
   };
 
   const calculatePricing = () => {
-    const qty = formData.quantity;
+    const qty = selectedQuantity;
     let bagsTotal = 0;
 
     if (qty === 1) {
@@ -113,7 +115,7 @@ const TShirtOrderForm = () => {
             name: formData.name,
             phone: formData.phoneNumber,
             address: formData.address,
-            quantity: formData.quantity,
+            quantity: selectedQuantity,
             location: formData.location,
             total_price: grandTotal,
             product_type: `T-Shirt - ${formData.color}` // Explicit tracking parameter
@@ -125,7 +127,7 @@ const TShirtOrderForm = () => {
       trackEvent('TShirt_Purchase_Success', {
         value: grandTotal,
         currency: 'NPR',
-        quantity: formData.quantity,
+        quantity: selectedQuantity,
       });
 
       setModalStep('success');
@@ -140,7 +142,8 @@ const TShirtOrderForm = () => {
 
   const handleCloseModal = () => {
     setModalStep('none');
-    setFormData({ name: '', address: '', phoneNumber: '', quantity: 1, location: 'inside', color: 'Black' });
+    setFormData({ name: '', address: '', phoneNumber: '', location: 'inside', color: 'Black' });
+    setSelectedQuantity(1);
   };
 
   return (
@@ -206,7 +209,7 @@ const TShirtOrderForm = () => {
           <label className="t-form-label">Quantity</label>
           <select
             name="quantity"
-            value={formData.quantity}
+            value={selectedQuantity}
             onChange={handleSelectChange}
             className="t-form-select"
           >
@@ -279,7 +282,7 @@ const TShirtOrderForm = () => {
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ color: 'var(--t-ink-muted)' }}>Quantity:</span>
-                  <strong>{formData.quantity} T-Shirt(s)</strong>
+                  <strong>{selectedQuantity} T-Shirt(s)</strong>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ color: 'var(--t-ink-muted)' }}>Color:</span>

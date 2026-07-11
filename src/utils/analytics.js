@@ -128,7 +128,13 @@ export const trackEvent = (eventName, params = {}, options = {}) => {
       mappedPixelName = 'CustomizeProduct';
     }
 
-    window.fbq('track', mappedPixelName, pixelData, options);
+    const standardEvents = ['AddPaymentInfo', 'AddToCart', 'AddToWishlist', 'CompleteRegistration', 'Contact', 'CustomizeProduct', 'Donate', 'FindLocation', 'InitiateCheckout', 'Lead', 'Purchase', 'Schedule', 'Search', 'StartTrial', 'SubmitApplication', 'Subscribe', 'ViewContent'];
+    
+    if (standardEvents.includes(mappedPixelName)) {
+      window.fbq('track', mappedPixelName, pixelData, options);
+    } else {
+      window.fbq('trackCustom', mappedPixelName, pixelData, options);
+    }
   }
 
   // 2. Dispatch to GA4

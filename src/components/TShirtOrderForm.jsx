@@ -144,7 +144,29 @@ const TShirtOrderForm = ({ selectedQuantity, setSelectedQuantity }) => {
         console.error('[Slack Frontend Post Exception]', slackErr);
       });
 
-      trackEvent('TShirt_Purchase_Success', {
+      // 3. Dispatch server-side Conversions API (CAPI) event
+      import('../utils/facebook-pixel').then(({ getCookie }) => {
+        const userData = {
+          name: formData.name,
+          phone: formData.phoneNumber,
+          fbp: getCookie('_fbp'),
+          fbc: getCookie('_fbc'),
+        };
+
+        fetch('/api/facebook-capi', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            eventName: 'TShirt_Purchase',
+            eventId: `boho-tshirt-${Date.now()}`,
+            eventSourceUrl: window.location.href,
+            userData,
+            customData: { value: grandTotal, currency: 'NPR' }
+          })
+        }).catch(() => {});
+      });
+
+      trackEvent('TShirt_Purchase', {
         value: grandTotal,
         currency: 'NPR',
         quantity: selectedQuantity,

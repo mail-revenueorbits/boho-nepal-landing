@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 
 const TShirtHeroSection = ({ selectedQuantity, setSelectedQuantity }) => {
   const images = [
-    '/t-shirt-images/t-shirt-1.png',
-    '/t-shirt-images/t-shirt-2.png',
-    '/t-shirt-images/t-shirt-3.png',
-    '/t-shirt-images/t-shirt-4.png',
-    '/t-shirt-images/t-shirt-5.png',
-    '/t-shirt-images/t-shirt-6.png',
+    '/t-shirt-images/t-shirt-1.webp',
+    '/t-shirt-images/t-shirt-2.webp',
+    '/t-shirt-images/t-shirt-3.webp',
+    '/t-shirt-images/t-shirt-4.webp',
+    '/t-shirt-images/t-shirt-5.webp',
+    '/t-shirt-images/t-shirt-6.webp',
   ];
 
   const [activeIndex, setActiveIndex] = useState(0);

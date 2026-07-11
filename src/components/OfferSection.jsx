@@ -327,7 +327,7 @@ const OfferSection = () => {
                 <input
                   type="text"
                   name="name"
-                  placeholder="तपाईंको पूरा नाम (Your Name) *"
+                  placeholder="e.g. Aarav Sharma"
                   value={formData.name}
                   onChange={handleInputChange}
                   onFocus={() => handleFieldFocus('name')}

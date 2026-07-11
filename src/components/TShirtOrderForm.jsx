@@ -210,7 +210,7 @@ const TShirtOrderForm = ({ selectedQuantity, setSelectedQuantity }) => {
           <input
             type="text"
             name="name"
-            placeholder="e.g. Ram Bahadur"
+            placeholder="e.g. Aarav Sharma"
             value={formData.name}
             onChange={handleInputChange}
             onFocus={() => handleFieldFocus('name')}

@@ -90,13 +90,13 @@ const TShirtOrderForm = ({ selectedQuantity, setSelectedQuantity }) => {
     setFormError('');
 
     if (!formData.name.trim() || !formData.phoneNumber.trim() || !formData.address.trim()) {
-      setFormError('कृपया सबै विवरण भर्नुहोस् (Please fill out all fields)');
+      setFormError('Please fill out all required fields to continue.');
       return;
     }
 
     const phoneRegex = /^[0-9\s-+]{7,15}$/;
     if (!phoneRegex.test(formData.phoneNumber.trim())) {
-      setFormError('सहि फोन नम्बर राख्नुहोला (Please enter a valid phone number)');
+      setFormError('Please enter a valid phone number.');
       return;
     }
 
@@ -134,7 +134,7 @@ const TShirtOrderForm = ({ selectedQuantity, setSelectedQuantity }) => {
 
     } catch (err) {
       console.error('[Checkout Error]', err);
-      setFormError('अर्डर सुरक्षित गर्दा समस्या भयो। (There was a problem submitting your order.)');
+      setFormError('There was a problem submitting your order. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -234,7 +234,15 @@ const TShirtOrderForm = ({ selectedQuantity, setSelectedQuantity }) => {
         </div>
 
         {formError && (
-          <div style={{ color: '#ff6b6b', margin: '1rem 0', fontWeight: 'bold' }}>
+          <div style={{ 
+            backgroundColor: 'oklch(35% 0.1 25)', 
+            color: 'oklch(90% 0.05 25)', 
+            padding: '1rem', 
+            border: '1px solid oklch(50% 0.15 25)', 
+            margin: '1rem 0', 
+            fontWeight: '600',
+            fontSize: '0.9rem'
+          }}>
             {formError}
           </div>
         )}

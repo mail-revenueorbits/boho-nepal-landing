@@ -253,7 +253,8 @@ const OfferSection = () => {
           address: formData.address,
           quantity: formData.quantity,
           location: formData.location,
-          totalPrice: grandTotal
+          totalPrice: grandTotal,
+          productName: 'Bohemian Hemp Sidebag'
         })
       }).catch((slackErr) => {
         console.error('[Slack Frontend Post Exception]', slackErr);

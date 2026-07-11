@@ -136,7 +136,8 @@ const TShirtOrderForm = ({ selectedQuantity, setSelectedQuantity }) => {
           address: `${formData.address} [T-Shirt - ${formData.color}]`,
           quantity: selectedQuantity,
           location: formData.location,
-          totalPrice: grandTotal
+          totalPrice: grandTotal,
+          productName: `T-Shirt`
         })
       }).catch((slackErr) => {
         console.error('[Slack Frontend Post Exception]', slackErr);

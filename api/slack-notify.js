@@ -5,7 +5,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: `Method ${req.method} Not Allowed` });
   }
 
-  const { name, phone, address, quantity, location, totalPrice } = req.body;
+  const { name, phone, address, quantity, location, totalPrice, productName = 'Bohemian Hemp Sidebag' } = req.body;
 
   const slackWebhookUrl = process.env.SLACK_WEBHOOK_URL;
 
@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     return res.status(200).json({
       success: true,
       message: 'Slack notification simulated in MOCK mode (Missing webhook url).',
-      debug: { name, phone, address, quantity, location, totalPrice }
+      debug: { name, phone, address, quantity, location, totalPrice, productName }
     });
   }
 
@@ -33,10 +33,10 @@ export default async function handler(req, res) {
                   `👤 *Customer*: \`${name}\`\n` +
                   `📞 *Phone Number*: \`${phone}\`\n` +
                   `📍 *Delivery Address*: \`${address}\`\n` +
-                  `📦 *Quantity Ordered*: \`${quantity} Bag(s)\`\n` +
+                  `📦 *Quantity Ordered*: \`${quantity} ${productName}(s)\`\n` +
                   `🌍 *Delivery Area*: \`${formattedLocation}\`\n` +
                   `💰 *Grand Total (COD)*: *Rs. ${totalPrice}*\n\n` +
-                  `🚚 _Please prepare the Bohemian Hemp Sidebag and process this order._`
+                  `🚚 _Please prepare the ${productName} and process this order._`
           }
         },
         {

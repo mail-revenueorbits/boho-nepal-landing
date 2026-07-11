@@ -45,6 +45,7 @@ const OfferSection = () => {
   const [modalStep, setModalStep] = useState('none'); // 'none', 'confirm', 'success'
   const [formError, setFormError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [orderPlaced, setOrderPlaced] = useState(false);
 
   // Focus state for field-level mobile analytics funnel
   const [trackedFields, setTrackedFields] = useState({
@@ -259,6 +260,7 @@ const OfferSection = () => {
       });
 
       // 5. Update state to show checkout success modal
+      setOrderPlaced(true);
       setModalStep('success');
 
     } catch (err) {
@@ -306,9 +308,18 @@ const OfferSection = () => {
             <h3>अर्डर फारम (Order Form)</h3>
           </div>
 
-          <form onSubmit={handleFormSubmit} className="actual-form">
-            
-            <div className="form-grid">
+          {orderPlaced ? (
+            <div className="success-inline-message animate-fade-in" style={{ padding: '3rem 1.5rem', textAlign: 'center', backgroundColor: '#f9fafb', borderRadius: '12px', marginTop: '1.5rem' }}>
+              <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🎉</div>
+              <h3 style={{ fontSize: '1.5rem', color: '#111827', marginBottom: '0.75rem', fontWeight: 'bold' }}>अर्डर सफल भयो !</h3>
+              <p style={{ color: '#4b5563', lineHeight: '1.5' }}>
+                तपाईंको अर्डर प्राप्त भयो। हामी डेलिभरी अघि कल गरेर मात्र सामान पठाउनेछौं। धन्यवाद!
+              </p>
+            </div>
+          ) : (
+            <form onSubmit={handleFormSubmit} className="actual-form">
+              
+              <div className="form-grid">
               
               {/* Full Name */}
               <div className="form-group">
@@ -403,6 +414,7 @@ const OfferSection = () => {
             </p>
 
           </form>
+          )}
         </div>
 
       </div>

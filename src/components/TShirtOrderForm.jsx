@@ -14,6 +14,7 @@ const TShirtOrderForm = ({ selectedQuantity, setSelectedQuantity }) => {
   const [modalStep, setModalStep] = useState('none'); // 'none', 'confirm', 'success'
   const [formError, setFormError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [orderPlaced, setOrderPlaced] = useState(false);
 
   // Focus state for field-level mobile analytics funnel
   const [trackedFields, setTrackedFields] = useState({});
@@ -147,6 +148,7 @@ const TShirtOrderForm = ({ selectedQuantity, setSelectedQuantity }) => {
         quantity: selectedQuantity,
       });
 
+      setOrderPlaced(true);
       setModalStep('success');
 
     } catch (err) {
@@ -169,8 +171,17 @@ const TShirtOrderForm = ({ selectedQuantity, setSelectedQuantity }) => {
         Complete Your Order
       </h2>
 
-      <form onSubmit={handleFormSubmit}>
-        <div className="t-form-group">
+      {orderPlaced ? (
+        <div style={{ padding: '4rem 1.5rem', textAlign: 'center', backgroundColor: 'var(--t-surface)', border: '1px solid oklch(25% 0 0)' }}>
+          <div style={{ fontSize: '4rem', marginBottom: '1.5rem' }}>🎉</div>
+          <h3 style={{ fontSize: '1.75rem', marginBottom: '1rem', fontWeight: '800' }}>Order Received!</h3>
+          <p style={{ color: 'var(--t-ink-muted)', fontSize: '1.125rem', lineHeight: '1.6' }}>
+            Thank you for shopping with Boho Nepal. We have successfully received your details and will call you shortly to confirm the delivery.
+          </p>
+        </div>
+      ) : (
+        <form onSubmit={handleFormSubmit}>
+          <div className="t-form-group">
           <label className="t-form-label">Full Name *</label>
           <input
             type="text"
@@ -283,6 +294,7 @@ const TShirtOrderForm = ({ selectedQuantity, setSelectedQuantity }) => {
           </button>
         </div>
       </form>
+      )}
 
       {/* Confirmation & Success Popups */}
       {modalStep !== 'none' && (

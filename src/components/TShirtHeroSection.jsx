@@ -41,7 +41,7 @@ const TShirtHeroSection = () => {
   };
 
   return (
-    <section className="t-hero-section container">
+    <section className="t-hero-section">
       <div className="t-hero-image-slider">
         <div 
           id="tshirt-slider"
@@ -85,6 +85,8 @@ const TShirtHeroSection = () => {
           ))}
         </div>
       </div>
+
+      <div className="container">
 
       <h1 className="t-hero-title">Wear Something They'll Read Twice.</h1>
       
@@ -131,6 +133,7 @@ const TShirtHeroSection = () => {
       <button onClick={scrollToForm} className="btn">
         Place Your Order Now
       </button>
+      </div>
     </section>
   );
 };

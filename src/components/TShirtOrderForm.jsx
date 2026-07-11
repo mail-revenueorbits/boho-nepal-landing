@@ -9,6 +9,7 @@ const TShirtOrderForm = () => {
     phoneNumber: '',
     quantity: 1,
     location: 'inside', // 'inside' = Kathmandu Valley, 'outside' = Outside Valley
+    color: 'Black',
   });
 
   const [modalStep, setModalStep] = useState('none'); // 'none', 'confirm', 'success'
@@ -115,7 +116,7 @@ const TShirtOrderForm = () => {
             quantity: formData.quantity,
             location: formData.location,
             total_price: grandTotal,
-            product_type: 'T-Shirt' // Explicit tracking parameter
+            product_type: `T-Shirt - ${formData.color}` // Explicit tracking parameter
           }
         ]);
 
@@ -139,7 +140,7 @@ const TShirtOrderForm = () => {
 
   const handleCloseModal = () => {
     setModalStep('none');
-    setFormData({ name: '', address: '', phoneNumber: '', quantity: 1, location: 'inside' });
+    setFormData({ name: '', address: '', phoneNumber: '', quantity: 1, location: 'inside', color: 'Black' });
   };
 
   return (
@@ -186,6 +187,19 @@ const TShirtOrderForm = () => {
             onFocus={() => handleFieldFocus('address')}
             className="t-form-input"
           />
+        </div>
+
+        <div className="t-form-group">
+          <label className="t-form-label">Color *</label>
+          <select
+            name="color"
+            value={formData.color}
+            onChange={handleSelectChange}
+            className="t-form-select"
+          >
+            <option value="Black">Black</option>
+            <option value="White">White</option>
+          </select>
         </div>
 
         <div className="t-form-group">
@@ -266,6 +280,10 @@ const TShirtOrderForm = () => {
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ color: 'var(--t-ink-muted)' }}>Quantity:</span>
                   <strong>{formData.quantity} T-Shirt(s)</strong>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: 'var(--t-ink-muted)' }}>Color:</span>
+                  <strong>{formData.color}</strong>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '0.5rem', borderTop: '1px solid oklch(25% 0 0)' }}>
                   <span>Total Amount:</span>

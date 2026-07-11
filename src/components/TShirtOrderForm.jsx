@@ -114,11 +114,10 @@ const TShirtOrderForm = ({ selectedQuantity, setSelectedQuantity }) => {
           {
             name: formData.name,
             phone: formData.phoneNumber,
-            address: formData.address,
+            address: `${formData.address} [T-Shirt - ${formData.color}]`,
             quantity: selectedQuantity,
             location: formData.location,
-            total_price: grandTotal,
-            product_type: `T-Shirt - ${formData.color}` // Explicit tracking parameter
+            total_price: grandTotal
           }
         ]);
 

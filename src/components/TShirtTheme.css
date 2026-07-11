@@ -1,0 +1,246 @@
+/* T-Shirt Theme Styles - Impeccable Mobile-First Design */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap');
+
+.tshirt-theme {
+  --font-family: 'Inter', sans-serif;
+  
+  /* OKLCH Monochrome Palette */
+  --t-bg: oklch(12% 0 0); /* Very dark gray, almost black */
+  --t-surface: oklch(18% 0 0); /* Slightly lighter for cards/sections */
+  --t-ink: oklch(98% 0 0); /* Near white for high contrast text */
+  --t-ink-muted: oklch(80% 0 0); /* Muted text for secondary info */
+  --t-accent: oklch(100% 0 0); /* Pure white for accents/buttons */
+  --t-accent-ink: oklch(10% 0 0); /* Dark text on white buttons */
+
+  background-color: var(--t-bg);
+  color: var(--t-ink);
+  font-family: var(--font-family);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Force #root to behave correctly on this page */
+#root:has(.tshirt-theme) {
+  padding-bottom: 0 !important;
+  background-color: var(--t-bg) !important;
+}
+
+/* Base Resets for this theme */
+.tshirt-theme * {
+  border-radius: 0 !important; /* Sharp edges strictly enforced */
+}
+
+.tshirt-theme h1,
+.tshirt-theme h2,
+.tshirt-theme h3 {
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  text-wrap: balance; /* Impeccable rule */
+  margin-bottom: 1rem;
+}
+
+.tshirt-theme p {
+  color: var(--t-ink-muted);
+  line-height: 1.6;
+  max-width: 65ch; /* Impeccable rule */
+  margin-bottom: 1rem;
+  font-weight: 300;
+}
+
+.tshirt-theme strong {
+  color: var(--t-ink);
+  font-weight: 600;
+}
+
+/* Mobile Layout Fundamentals */
+.tshirt-theme .container {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+.tshirt-theme section {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+  border-bottom: 1px solid oklch(25% 0 0);
+}
+
+/* Buttons */
+.tshirt-theme .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 1.25rem 2rem;
+  background-color: var(--t-accent);
+  color: var(--t-accent-ink);
+  font-weight: 800;
+  font-size: 1.125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease;
+}
+
+.tshirt-theme .btn:active {
+  transform: scale(0.98);
+}
+
+.tshirt-theme .btn-secondary {
+  background-color: transparent;
+  color: var(--t-ink);
+  border: 2px solid var(--t-ink);
+}
+
+/* Hero Section */
+.tshirt-theme .t-hero-section {
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.tshirt-theme .t-hero-image-slider {
+  width: 100%;
+  height: 60vh;
+  min-height: 400px;
+  max-height: 600px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.tshirt-theme .t-hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.tshirt-theme .t-hero-title {
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  line-height: 1.1;
+  color: var(--t-ink);
+  text-transform: uppercase;
+}
+
+/* Features List */
+.tshirt-theme .t-feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tshirt-theme .t-feature-item {
+  display: flex;
+  align-items: center;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--t-ink);
+}
+
+.tshirt-theme .t-feature-icon {
+  margin-right: 1rem;
+  color: var(--t-ink);
+  flex-shrink: 0;
+}
+
+/* Pricing Grid */
+.tshirt-theme .pricing-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.tshirt-theme .pricing-tier {
+  background-color: var(--t-surface);
+  padding: 1.5rem;
+  border: 1px solid oklch(25% 0 0);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tshirt-theme .pricing-tier-name {
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.tshirt-theme .pricing-tier-price {
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.tshirt-theme .pricing-tier-desc {
+  font-size: 0.875rem;
+  color: var(--t-ink-muted);
+  margin-top: 0.25rem;
+}
+
+/* Form Styles for TShirt Theme */
+.tshirt-theme .t-form-group {
+  margin-bottom: 1.5rem;
+}
+.tshirt-theme .t-form-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--t-ink);
+}
+.tshirt-theme .t-form-input,
+.tshirt-theme .t-form-select {
+  width: 100%;
+  padding: 1rem;
+  background-color: transparent;
+  border: 1px solid oklch(40% 0 0);
+  color: var(--t-ink);
+  font-family: var(--font-family);
+  font-size: 1rem;
+  border-radius: 0;
+  -webkit-appearance: none;
+}
+.tshirt-theme .t-form-input:focus,
+.tshirt-theme .t-form-select:focus {
+  outline: none;
+  border-color: var(--t-ink);
+}
+
+/* Modals */
+.tshirt-theme .t-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.8);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem;
+  backdrop-filter: blur(4px);
+}
+.tshirt-theme .t-modal-content {
+  background-color: var(--t-bg);
+  border: 1px solid var(--t-ink);
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+.tshirt-theme .t-modal-success {
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .tshirt-theme .btn {
+    transition: none;
+  }
+}

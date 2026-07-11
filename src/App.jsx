@@ -7,6 +7,7 @@ import GallerySection from './components/GallerySection';
 import Footer from './components/Footer';
 import StickyCTA from './components/StickyCTA';
 import AdminPage from './components/AdminPage';
+import TShirtLandingPage from './components/TShirtLandingPage';
 import { initAnalytics, setupBehavioralTracking } from './utils/analytics';
 
 function App() {
@@ -31,9 +32,14 @@ function App() {
   }, []);
 
   const isAdminPath = currentPath === '/admin' || currentPath === '/admin/';
+  const isTShirtLanding = currentPath === '/landing/t-shirt' || currentPath === '/landing/t-shirt/';
 
   if (isAdminPath) {
     return <AdminPage />;
+  }
+
+  if (isTShirtLanding) {
+    return <TShirtLandingPage />;
   }
 
   return (

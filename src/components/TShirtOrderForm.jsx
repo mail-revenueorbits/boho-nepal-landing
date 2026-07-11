@@ -81,10 +81,14 @@ const TShirtOrderForm = ({ selectedQuantity, setSelectedQuantity }) => {
     const deliveryCharge = qty >= 2 ? 0 : (formData.location === 'inside' ? 100 : 150);
     const grandTotal = bagsTotal + deliveryCharge;
 
-    return { bagsTotal, deliveryCharge, grandTotal };
+    const actualDeliveryCost = formData.location === 'inside' ? 120 : 220;
+    const totalCost = (375 * qty) + actualDeliveryCost;
+    const absoluteProfit = grandTotal - totalCost;
+
+    return { bagsTotal, deliveryCharge, grandTotal, absoluteProfit };
   };
 
-  const { bagsTotal, deliveryCharge, grandTotal } = calculatePricing();
+  const { bagsTotal, deliveryCharge, grandTotal, absoluteProfit } = calculatePricing();
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -161,13 +165,13 @@ const TShirtOrderForm = ({ selectedQuantity, setSelectedQuantity }) => {
             eventId: `boho-tshirt-${Date.now()}`,
             eventSourceUrl: window.location.href,
             userData,
-            customData: { value: grandTotal, currency: 'NPR' }
+            customData: { value: absoluteProfit, currency: 'NPR' }
           })
         }).catch(() => {});
       });
 
       trackEvent('TShirt_Purchase', {
-        value: grandTotal,
+        value: absoluteProfit,
         currency: 'NPR',
         quantity: selectedQuantity,
       });

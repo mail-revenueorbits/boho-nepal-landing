@@ -133,11 +133,12 @@ const TShirtOrderForm = ({ selectedQuantity, setSelectedQuantity }) => {
         body: JSON.stringify({
           name: formData.name,
           phone: formData.phoneNumber,
-          address: `${formData.address} [T-Shirt - ${formData.color}]`,
+          address: formData.address,
           quantity: selectedQuantity,
           location: formData.location,
           totalPrice: grandTotal,
-          productName: `T-Shirt`
+          productName: `Premium Boho T-Shirt`,
+          productVariant: formData.color
         })
       }).catch((slackErr) => {
         console.error('[Slack Frontend Post Exception]', slackErr);

@@ -5,7 +5,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: `Method ${req.method} Not Allowed` });
   }
 
-  const { name, phone, address, quantity, location, totalPrice, productName = 'Bohemian Hemp Sidebag' } = req.body;
+  const { name, phone, address, quantity, location, totalPrice, productName = 'Bohemian Hemp Sidebag', productVariant } = req.body;
 
   const slackWebhookUrl = process.env.SLACK_WEBHOOK_URL;
 
@@ -15,26 +15,32 @@ export default async function handler(req, res) {
     return res.status(200).json({
       success: true,
       message: 'Slack notification simulated in MOCK mode (Missing webhook url).',
-      debug: { name, phone, address, quantity, location, totalPrice, productName }
+      debug: { name, phone, address, quantity, location, totalPrice, productName, productVariant }
     });
   }
 
   try {
     const formattedLocation = location === 'inside' ? 'Inside Kathmandu Valley' : 'Outside Valley';
+    const variantLine = productVariant ? `🎨 *Variant/Color*: \`${productVariant}\`\n` : '';
+    const emoji = productName.toLowerCase().includes('shirt') ? '👕' : '🎒';
     
     const slackPayload = {
-      text: `🚨 *New Order Placed!* 🚨`,
+      text: `🚨 *New ${productName} Order!* 🚨`,
       blocks: [
         {
           type: "section",
           text: {
             type: "mrkdwn",
             text: `🚨 *NEW BOHO NEPAL ORDER!* 🚨\n\n` +
+                  `*--- CUSTOMER DETAILS ---*\n` +
                   `👤 *Customer*: \`${name}\`\n` +
                   `📞 *Phone Number*: \`${phone}\`\n` +
                   `📍 *Delivery Address*: \`${address}\`\n` +
-                  `📦 *Quantity Ordered*: \`${quantity} ${productName}(s)\`\n` +
-                  `🌍 *Delivery Area*: \`${formattedLocation}\`\n` +
+                  `🌍 *Delivery Area*: \`${formattedLocation}\`\n\n` +
+                  `*--- ORDER DETAILS ---*\n` +
+                  `${emoji} *Product*: \`${productName}\`\n` +
+                  variantLine +
+                  `📦 *Quantity*: \`${quantity}\`\n` +
                   `💰 *Grand Total (COD)*: *Rs. ${totalPrice}*\n\n` +
                   `🚚 _Please prepare the ${productName} and process this order._`
           }

@@ -7,7 +7,7 @@ const TShirtOrderForm = ({ selectedQuantity, setSelectedQuantity }) => {
     name: '',
     address: '',
     phoneNumber: '',
-    location: 'inside', // 'inside' = Kathmandu Valley, 'outside' = Outside Valley
+    location: 'outside',
     color: 'Black',
   });
 
@@ -19,22 +19,7 @@ const TShirtOrderForm = ({ selectedQuantity, setSelectedQuantity }) => {
   // Focus state for field-level mobile analytics funnel
   const [trackedFields, setTrackedFields] = useState({});
 
-  useEffect(() => {
-    const detectUserLocation = async () => {
-      try {
-        const res = await fetch('/api/detect-location');
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.location) {
-            setFormData(prev => ({ ...prev, location: data.location }));
-          }
-        }
-      } catch (err) {
-        // Silent fail
-      }
-    };
-    detectUserLocation();
-  }, []);
+
 
   const handleFieldFocus = (fieldName) => {
     if (!trackedFields[fieldName]) {
